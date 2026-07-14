@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QThread, Qt, Signal, Slot
-from PySide6.QtGui import QAction, QPixmap
+from PySide6.QtGui import QAction, QKeySequence, QPixmap, QShortcut
 from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PySide6.QtMultimediaWidgets import QVideoWidget
 from PySide6.QtWidgets import (
@@ -115,6 +115,12 @@ class MainWindow(QMainWindow):
         undo.clicked.connect(self.undo_last)
         restore = QPushButton("Restore session")
         restore.clicked.connect(self.restore_session)
+        purge_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Left), self)
+        purge_shortcut.setContext(Qt.ShortcutContext.WindowShortcut)
+        purge_shortcut.activated.connect(self.purge_current)
+        keep_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Right), self)
+        keep_shortcut.setContext(Qt.ShortcutContext.WindowShortcut)
+        keep_shortcut.activated.connect(self.keep_current)
         controls = QHBoxLayout()
         controls.addWidget(purge)
         controls.addWidget(keep)
@@ -272,13 +278,3 @@ class MainWindow(QMainWindow):
 
         self.mode = "dark" if self.mode == "light" else "light"
         self._apply_theme()
-
-    def keyPressEvent(self, event) -> None:  # noqa: N802
-        """Map left and right arrows to purge and keep decisions."""
-
-        if event.key() == Qt.Key.Key_Left:
-            self.purge_current()
-        elif event.key() == Qt.Key.Key_Right:
-            self.keep_current()
-        else:
-            super().keyPressEvent(event)
