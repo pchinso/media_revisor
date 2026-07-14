@@ -30,6 +30,8 @@ On Linux, activate the environment with `source .venv/bin/activate`.
 ## Run
 
 On Windows, double-click `run_media_revisor.bat` in the project root.
+On Linux, run `./run_media_revisor.sh` from the project root. If needed, make
+it executable with `chmod +x run_media_revisor.sh`.
 
 ```text
 python -m media_revisor
